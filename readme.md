@@ -1,6 +1,6 @@
 # 🛒 E-commerce API
 
-A RESTful E-commerce API built with **FastAPI**, **SQLAlchemy**, and **JWT authentication**.  
+A RESTful E-commerce API built with **Django REST API backend**, **SQLAlchemy**, and **JWT authentication**.  
 This project provides product management, user authentication, order processing, and optional payment integration.
 
 ---
