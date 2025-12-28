@@ -1,58 +1,55 @@
-# 🛒 E-commerce API
+# E-commerce API (Fixed & Enhanced)
 
-A RESTful E-commerce API built with **FastAPI**, **SQLAlchemy**, and **JWT authentication**.  
-This project provides product management, user authentication, order processing, and optional payment integration.
+A professional-grade Django Rest Framework e-commerce API with modern features, security, and performance optimizations.
 
----
+## ✨ Key Features
+- **Consolidated Architecture**: Unified `views.py` and `urls.py` for a clean, maintainable codebase.
+- **Stock Management**: Atomic transactions for order creation with automatic stock deduction and restoration upon cancellation.
+- **Security**: Environment variable support via `python-decouple`. Sensitive keys are no longer hardcoded.
+- **Performance**:
+  - Redis Caching for Product List and Details.
+  - Efficient Signals that clear specific cache keys instead of rebuilding global ones.
+  - Pagination enabled by default.
+- **Payments**: Integrated Stripe Payment Intent creation and confirmation logic.
+- **Business Logic**: Complete flow for Cart, Wishlist, Coupons, and Order processing.
 
-## 🚀 Features
-- User authentication (JWT-based)
-- Product CRUD (Create, Read, Update, Delete)
-- Cart & Order management
-- Secure password hashing
-- Database integration (PostgreSQL/MySQL)
-- Optional: Payment integration (Stripe)
-- Environment-based configuration
+## 🚀 Setup & Installation
 
----
+1. **Environment Variables**:
+   Create a `.env` file in the root directory (based on `.env.example`).
+   ```env
+   SECRET_KEY=...
+   DEBUG=False
+   DB_NAME=...
+   REDIS_URL=redis://localhost:6379/0
+   STRIPE_SECRET_KEY=...
+   ```
 
-## 📂 Project Structure
-ecommerce_api/
-│── app/
-│ ├── main.py # Entry point
-│ ├── models/ # SQLAlchemy models
-│ ├── schemas/ # Pydantic schemas
-│ ├── routes/ # API routes (products, users, orders)
-│ ├── services/ # Business logic
-│ ├── core/ # Config, security, JWT utils
-│ └── db.py # Database connection
-│
-│── tests/ # Pytest test cases
-│── requirements.txt # Dependencies
-│── .env # Environment variables
-│── README.md # Documentation
+2. **Database**:
+   ```bash
+   python manage.py migrate
+   ```
 
+3. **Run Server**:
+   ```bash
+   python manage.py runserver
+   ```
 
----
+## 📚 API Documentation
+- **Swagger UI**: `/api/docs/`
+- **Redoc**: `/api/redoc/`
 
-## 🛠️ Installation
+## 🛠️ Main Endpoints
+- `POST /api/auth/register/` - User Registration
+- `POST /api/auth/login/` - JWT Login
+- `GET /api/products/` - Product Listing (with search/filter/sort)
+- `POST /api/cart/add/` - Add items to cart
+- `POST /api/orders/create/` - Create order from cart (Atomic)
+- `POST /api/orders/<id>/checkout/` - Initiate Stripe Payment
+- `POST /api/orders/<id>/cancel/` - Cancel order and restore stock
 
-### 1️⃣ Clone the repository
-```bash
-git clone https://github.com/your-username/ecommerce_api.git
-cd ecommerce_api
-
-
-python -m venv venv
-source venv/bin/activate   # Linux/Mac
-venv\Scripts\activate      # Windows
-
-pip install -r requirements.txt
-
-DATABASE_URL=postgresql://user:password@localhost:5432/ecommerce_db
-SECRET_KEY=your_secret_key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-STRIPE_SECRET_KEY=your_stripe_key   # optional
-
-uvicorn app.main:app --reload
+## 🛡️ Security Fixes Applied
+- Removed hardcoded Stripe/Django keys.
+- Used `permissions.IsAuthenticatedOrReadOnly` by default.
+- Fixed `ProductManager` which was hiding valid products.
+- Added `transaction.atomic` to sensitive checkout flows.
